@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Button addBtn = findViewById(R.id.addProduct);
         Button viewBtn = findViewById(R.id.viewProduct);
         final LinearLayout layout = findViewById(R.id.main);
-
+// DATABASE LOG TESTING ----------------------------------------------------------------------------------------------------
         //Inventory(int id, String name, int quantity, String supplier, double price)
         // Inserting Inventory/Row
         Log.d("Insert", "Inserting...");
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             // writing inventories to log
             Log.d("Inventory::", log);
         }
-
+// DATABASE LOG TESTING ENDS ------------------------------------------------------------------------------------------------------
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AddProduct.class));
