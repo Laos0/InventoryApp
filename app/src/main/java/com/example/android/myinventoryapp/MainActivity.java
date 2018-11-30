@@ -33,23 +33,28 @@ public class MainActivity extends AppCompatActivity {
 // DATABASE LOG TESTING ----------------------------------------------------------------------------------------------------
         //Inventory(int id, String name, int quantity, String supplier, double price)
         // Inserting Inventory/Row
-        Log.d("Insert", "Inserting...");
-        db.addInventory(new Inventory(0, "Hulk Toy", 3, "R Toy", 5.99));
-        db.addInventory(new Inventory(1, "Spider Toy", 3, "R Toy", 3.99));
-        db.addInventory(new Inventory(2, "Cat Toy", 3, "R Toy", 2.99));
-        db.addInventory(new Inventory(3, "Dog Toy", 3, "R Toy", 1.99));
-
-        // Reading all inventory
-        Log.d("Reading: ", "Reading all inventories...");
-        List<Inventory> inventory = db.getAllInventory();
-
-        for(Inventory inventories : inventory){
-            String log = "id: " + inventories.getId() + " ,Name: " + inventories.getName() + " ,Quantity: " + inventories.getQuantity()
-                    + " ,Supplier: " + inventories.getSupplier() + " ,Price: " + inventories.getPrice();
-            // writing inventories to log
-            Log.d("Inventory::", log);
-        }
+//        Log.d("Insert", "Inserting...");
+//        db.addInventory(new Inventory(0, "Hulk Toy", 3, "R Toy", 5.99));
+//        db.addInventory(new Inventory(1, "Spider Toy", 3, "R Toy", 3.99));
+//        db.addInventory(new Inventory(2, "Cat Toy", 3, "R Toy", 2.99));
+//        db.addInventory(new Inventory(3, "Dog Toy", 3, "R Toy", 1.99));
+//
+//        // Reading all inventory
+//        Log.d("Reading: ", "Reading all inventories...");
+//        List<Inventory> inventory = db.getAllInventory();
+//
+//        for(Inventory inventories : inventory){
+//            String log = "id: " + inventories.getId() + " ,Name: " + inventories.getName() + " ,Quantity: " + inventories.getQuantity()
+//                    + " ,Supplier: " + inventories.getSupplier() + " ,Price: " + inventories.getPrice();
+//            // writing inventories to log
+//            Log.d("Inventory::", log);
+//        }
 // DATABASE LOG TESTING ENDS ------------------------------------------------------------------------------------------------------
+
+//        for(int i = 0; i < db.getInventoryCount(); i++) {
+//            db.deleteInventory(db.getInventory(0));
+//        }
+
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AddProduct.class));

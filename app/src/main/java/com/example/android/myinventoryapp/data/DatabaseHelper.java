@@ -3,11 +3,10 @@ package com.example.android.myinventoryapp.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Debug;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 import com.example.android.myinventoryapp.Inventory;
 
@@ -16,7 +15,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
         // Database version
-        private static final int DATABASE_VERSION = 1;
+        private static final int DATABASE_VERSION = 3;
         // Database name
         private static final String DATABASE_NAME = "InventoryInfo";
         // Contact table name
@@ -26,20 +25,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         private static final String KEY_NAME = "name";
         private static final String KEY_QUANTITY = "quantity";
         private static final String KEY_SUPPLIER = "supplier";
-        private static final String KEY_Price = "price";
+        private static final String KEY_PRICE = "price";
 
     public DatabaseHelper(Context context) {
-        super(context, TABLE_INVENTORY, null, 3);
+        super(context, TABLE_INVENTORY, null, DATABASE_VERSION);
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE " +TABLE_INVENTORY + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + "TEXT,"
-                + KEY_QUANTITY + "INTEGER," + KEY_SUPPLIER + "TEXT,"
-                + KEY_Price + "DOUBLE" + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
+//        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_INVENTORY + "("
+//                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"
+//                + KEY_QUANTITY + " INTEGER," + KEY_SUPPLIER + " TEXT,"
+//                + KEY_PRICE + " DOUBLE" + ")";
+
+        String CREATE_INVENTORY_TABLE = "CREATE TABLE " + TABLE_INVENTORY + " ("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_QUANTITY + " INTEGER," +
+                KEY_SUPPLIER + " TEXT," + KEY_PRICE + " DOUBLE" + ")";
+
+        db.execSQL(CREATE_INVENTORY_TABLE);
     }
 
     @Override
@@ -58,18 +61,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_NAME, inventory.getName()); // Inventory name
         values.put(KEY_QUANTITY, inventory.getQuantity()); // Inventory quantity
         values.put(KEY_SUPPLIER, inventory.getSupplier()); // Inventory supplier
-        values.put(KEY_Price, inventory.getPrice()); // Inventory price
+        values.put(KEY_PRICE, inventory.getPrice()); // Inventory price
 
         // inserting row
         db.insert(TABLE_INVENTORY, null, values);
-        db.close(); // Closing database connection
+        // Closing database connection
+        db.close();
     }
 
     // Getting one inventory
     public Inventory getInventory(int id){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_INVENTORY, new String[]{KEY_ID, KEY_NAME, KEY_QUANTITY, KEY_SUPPLIER, KEY_NAME}, KEY_ID + "=?",
+        Cursor cursor = db.query(TABLE_INVENTORY, new String[]{KEY_ID, KEY_NAME, KEY_QUANTITY, KEY_SUPPLIER, KEY_PRICE}, KEY_ID + "=?",
                 new String[]{String.valueOf(id)}, null,null,null,null);
         if(cursor != null){
             cursor.moveToFirst();
@@ -119,6 +123,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
+    public int getTotalRows(){
+       SQLiteDatabase db = this.getReadableDatabase();
+       long count = DatabaseUtils.queryNumEntries(db, TABLE_INVENTORY);
+       int counter = (int) count;
+       db.close();
+       return counter;
+    }
+
     // Updating a inventory
     public int updateInventory(Inventory inventory){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -127,7 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_NAME, inventory.getName()); // Inventory name
         values.put(KEY_QUANTITY, inventory.getQuantity()); // Inventory quantity
         values.put(KEY_SUPPLIER, inventory.getSupplier()); // Inventory supplier
-        values.put(KEY_Price, inventory.getPrice()); // Inventory price
+        values.put(KEY_PRICE, inventory.getPrice()); // Inventory price
 
         // updating row
         return db.update(TABLE_INVENTORY, values, KEY_ID + "=?", new String[]{String.valueOf(inventory.getId())});
@@ -139,6 +151,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_INVENTORY, KEY_ID + "=?",
                 new String[]{String.valueOf(inventory.getId())});
         db.close();
+    }
+
+    // Update Quantity
+    public boolean updateData(String id, String name, String quantity, String supplier, String price){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_ID, id);
+        contentValues.put(KEY_NAME, name);
+        contentValues.put(KEY_QUANTITY, quantity);
+        contentValues.put(KEY_SUPPLIER, supplier);
+        contentValues.put(KEY_PRICE, price);
+        db.update(TABLE_INVENTORY, contentValues, "id = ?", new String[] { id });
+        return true;
+    }
+
+    public void updateKeyId(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_ID, id);
+        db.update(TABLE_INVENTORY, contentValues, "id = ?", new String[] { id });
     }
 
 }
